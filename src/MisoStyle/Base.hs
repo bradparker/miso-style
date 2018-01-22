@@ -7,7 +7,7 @@ module MisoStyle.Base
   , StyledElement
   ) where
 
-import           Control.Monad.Trans.Writer (Writer, runWriter, writer)
+import           Control.Monad.Trans.Writer (Writer, runWriter, tell, writer)
 import           Data.Monoid                ((<>))
 import           Miso                       (Attribute, View)
 import qualified Miso
@@ -26,11 +26,8 @@ base ::
   -> [StyledElement action]
   -> StyledElement action
 base el styles attrs children =
-  writer
-    ( el (Miso.class_ (renderClasses styles) : attrs) children'
-    , styles <> styles')
-  where
-    (children', styles') = runWriter (sequence children)
+  el (Miso.class_ (renderClasses styles) : attrs) <$>
+  (tell styles >> sequence children)
 
 text :: MisoString -> StyledElement action
 text str = writer (Miso.text str, mempty)
