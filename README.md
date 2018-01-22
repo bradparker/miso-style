@@ -11,21 +11,38 @@ The `MisoStyle` module exports a function called `base` (this is a silly name) i
 It looks like this:
 
 ```haskell
-import MisoStyle  (stylesheet, animation, atmedia, base, rule, StyledElement)
+{-# LANGUAGE OverloadedStrings #-}
+
+module Hello (hello) where
+
+import Data.Monoid (<>)
+import Miso (div_)
+import MisoStyle
+  ( StyledElement
+  , animation
+  , atmedia
+  , base
+  , keyframe
+  , rule
+  , stylesheet
+  , text
+  )
 
 helloStyles =
   stylesheet
-    [ rule ("color", "white")
-    , rule ("padding", "1rem")
-    , rule ("border-raduis", "1rem")
-    , rule ("background-color", "coral")
-    , rule ("animation-duration", "2s")
-    , rule ("animation-iteration-count", "infinite")
+    [ rule "color" "white"
+    , rule "padding" "1rem"
+    , rule "border-raduis" "1rem"
+    , rule "background-color" "coral"
+    , rule "animation-duration" "2s"
+    , rule "animation-iteration-count" "infinite"
     , animation
-        [ ("0%", [("opacity", "0.5")])
-        , ("100%", [("opacity", "1")])
+        [ keyframe "0%" [rule "opacity" "0.5"]
+        , keyframe "100%" [rule "opacity" "1"]
         ]
-    , atmedia ("screen and (min-width: 400px)", [("background-color", "seagreen")])
+    , atmedia
+        "screen and (min-width: 400px)"
+        [rule "background-color" "seagreen"]
     ]
 
 hello :: MisoString -> StyledElement ()

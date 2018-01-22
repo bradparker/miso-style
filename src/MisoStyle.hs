@@ -6,7 +6,9 @@ module MisoStyle
   , rule
   , animation
   , atmedia
+  , keyframe
   ) where
 
 import           MisoStyle.Base   (base, styledView, text)
-import           MisoStyle.Styles (animation, atmedia, rule, stylesheet)
+import           MisoStyle.Styles (animation, atmedia, keyframe, rule,
+                                   stylesheet)

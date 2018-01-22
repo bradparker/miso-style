@@ -4,10 +4,11 @@ module MisoStyle.Styles
   , animation
   , atmedia
   , stylesheet
+  , keyframe
   , renderClasses
   , renderStyles
   ) where
 
 import           MisoStyle.Styles.Print (renderClasses, renderStyles)
-import           MisoStyle.Styles.Types (Styles, animation, atmedia, rule,
-                                         stylesheet)
+import           MisoStyle.Styles.Types (Styles, animation, atmedia, keyframe,
+                                         rule, stylesheet)

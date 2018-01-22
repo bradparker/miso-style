@@ -13,8 +13,8 @@ import           Miso        (Effect, Sub, View, button_, div_, keyboardSub,
                               mouseSub, noEff, onClick)
 import qualified Miso
 import           Miso.String (ms)
-import           MisoStyle   (animation, atmedia, base, rule, styledView,
-                              stylesheet, text)
+import           MisoStyle   (animation, atmedia, base, keyframe, rule,
+                              styledView, stylesheet, text)
 
 type Model = Int
 
@@ -48,13 +48,13 @@ view =
       [ base
           button_
           (stylesheet
-             [ rule ("color", "white")
-             , rule ("background-color", "red")
-             , rule ("animation-duration", "2s")
-             , rule ("animation-iteration-count", "infinite")
+             [ rule "color" "white"
+             , rule "background-color" "red"
+             , rule "animation-duration" "2s"
+             , rule "animation-iteration-count" "infinite"
              , animation
-                 [ ("0%", [("background-color", "coral")])
-                 , ("100%", [("background-color", "red")])
+                 [ keyframe "0%" [rule "background-color" "coral"]
+                 , keyframe "100%" [rule "background-color" "red"]
                  ]
              ])
           [onClick (Decrement 2)]
@@ -63,11 +63,11 @@ view =
       , base
           button_
           (stylesheet
-             [ rule ("color", "white")
-             , rule ("background-color", "green")
+             [ rule "color" "white"
+             , rule "background-color" "green"
              , atmedia
-                 ( "screen and (min-width: 400px)"
-                 , [("background-color", "blue")])
+                 "screen and (min-width: 400px)"
+                 [rule "background-color" "blue"]
              ])
           [onClick (Increment 2)]
           [text "+"]

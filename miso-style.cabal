@@ -21,7 +21,8 @@ library
     containers,
     miso,
     hashable,
-    pretty
+    pretty,
+    semigroups
 
 executable sample-app
   main-is:             Main.hs
