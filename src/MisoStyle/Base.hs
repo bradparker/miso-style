@@ -8,7 +8,6 @@ module MisoStyle.Base
   ) where
 
 import           Control.Monad.Trans.Writer (Writer, runWriter, tell, writer)
-import           Data.Monoid                ((<>))
 import           Miso                       (Attribute, View)
 import qualified Miso
 import           Miso.String                (MisoString)
