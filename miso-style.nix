@@ -7,6 +7,7 @@
 , pretty
 , stdenv
 , transformers
+, lens
 }:
 mkDerivation {
   pname = "miso-style";
@@ -21,6 +22,7 @@ mkDerivation {
       miso
       pretty
       transformers
+      lens
     ];
   executableHaskellDepends = [ base miso ];
   description = "CSS in Haskell";

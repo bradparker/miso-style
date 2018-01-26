@@ -22,7 +22,8 @@ library
     miso,
     hashable,
     pretty,
-    semigroups
+    semigroups,
+    lens
 
 executable sample-app
   main-is:             Main.hs

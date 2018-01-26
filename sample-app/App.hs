@@ -9,12 +9,13 @@ module App
   ) where
 
 import           Data.Bool   (bool)
+import           Data.Monoid (mempty)
 import           Miso        (Effect, Sub, View, button_, div_, keyboardSub,
                               mouseSub, noEff, onClick)
 import qualified Miso
 import           Miso.String (ms)
-import           MisoStyle   (animation, atmedia, base, keyframe, rule,
-                              styledView, stylesheet, text)
+import           MisoStyle   (animation, atmedia, base, hover, keyframe,
+                              property, styledView, styles, text)
 
 type Model = Int
 
@@ -43,32 +44,31 @@ view =
   styledView $ \m ->
     base
       div_
-      (stylesheet [])
+      (styles (return mempty))
       []
       [ base
           button_
-          (stylesheet
-             [ rule "color" "white"
-             , rule "background-color" "red"
-             , rule "animation-duration" "2s"
-             , rule "animation-iteration-count" "infinite"
-             , animation
-                 [ keyframe "0%" [rule "background-color" "coral"]
-                 , keyframe "100%" [rule "background-color" "red"]
-                 ]
-             ])
+          (styles $ do
+             property "color" "white"
+             property "background-color" "red"
+             property "animation-duration" "2s"
+             property "animation-iteration-count" "infinite"
+             animation
+               [ keyframe "0%" (property "background-color" "coral")
+               , keyframe "100%" (property "background-color" "red")
+               ])
           [onClick (Decrement 2)]
           [text "-"]
       , text (ms (" " ++ show m ++ " "))
       , base
           button_
-          (stylesheet
-             [ rule "color" "white"
-             , rule "background-color" "green"
-             , atmedia
-                 "screen and (min-width: 400px)"
-                 [rule "background-color" "blue"]
-             ])
+          (styles $ do
+             property "color" "white"
+             property "background-color" "green"
+             hover (property "background-color" "seagreen")
+             atmedia
+               "screen and (min-width: 400px)"
+               (property "background-color" "blue"))
           [onClick (Increment 2)]
           [text "+"]
       ]

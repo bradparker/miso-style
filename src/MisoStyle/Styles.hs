@@ -1,14 +1,15 @@
 module MisoStyle.Styles
   ( Styles
-  , rule
+  , property
   , animation
   , atmedia
-  , stylesheet
+  , styles
+  , hover
   , keyframe
   , renderClasses
   , renderStyles
   ) where
 
 import           MisoStyle.Styles.Print (renderClasses, renderStyles)
-import           MisoStyle.Styles.Types (Styles, animation, atmedia, keyframe,
-                                         rule, stylesheet)
+import           MisoStyle.Styles.Types (Styles, animation, atmedia, hover,
+                                         keyframe, property, styles)
