@@ -8,6 +8,8 @@ module MisoStyle.Styles.Types
   , PseudoClass
   , Style(..)
   , Styles(..)
+  , AcceptsProperty
+  , Builder
   , keyframe
   , animation
   , styles

@@ -46,8 +46,7 @@ style :: Style -> Doc
 style r@(Rule m ss p) =
   "@media" <+>
   misostring (fromMaybe "all" m) <+>
-  braces
-    (char '.' <> identifier r <> pseudoClasses ss <+> braces (property p))
+  braces (char '.' <> identifier r <> pseudoClasses ss <+> braces (property p))
 style a@(Animation m ss (Keyframes ks)) =
   style (Rule m ss (Property "animation-name" (identify a))) <+>
   text "@keyframes" <+> identifier a <+> braces (mconcat (map keyframe ks))

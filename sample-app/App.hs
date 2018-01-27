@@ -14,8 +14,10 @@ import           Miso        (Effect, Sub, View, button_, div_, keyboardSub,
                               mouseSub, noEff, onClick)
 import qualified Miso
 import           Miso.String (ms)
-import           MisoStyle   (StyledElement, animation, atmedia, base, hover,
-                              keyframe, property, styledView, styles, text)
+import           MisoStyle   (StyledElement, animation, animationDuration,
+                              animationIterationCount, atmedia, backgroundColor,
+                              base, color, hover, keyframe, styledView, styles,
+                              text)
 
 type Model = Int
 
@@ -44,13 +46,13 @@ increment =
   base
     button_
     (styles $ do
-       property "color" "white"
-       property "background-color" "red"
-       property "animation-duration" "2s"
-       property "animation-iteration-count" "infinite"
+       color "white"
+       backgroundColor "red"
+       animationDuration "2s"
+       animationIterationCount "infinite"
        animation $ do
-         keyframe "0%" (property "background-color" "coral")
-         keyframe "100%" (property "background-color" "red"))
+         keyframe "0%" (backgroundColor "coral")
+         keyframe "100%" (backgroundColor "red"))
     [onClick (Decrement 2)]
     [text "-"]
 
@@ -59,20 +61,20 @@ decrement =
   base
     button_
     (styles $ do
-       property "color" "white"
-       property "background-color" "green"
-       hover (property "background-color" "seagreen")
-       atmedia
-         "screen and (min-width: 400px)"
-         (property "background-color" "blue"))
+       color "white"
+       backgroundColor "green"
+       hover (backgroundColor "seagreen")
+       atmedia "screen and (min-width: 400px)" (backgroundColor "blue"))
     [onClick (Increment 2)]
     [text "+"]
 
+app :: Model -> StyledElement Action
+app m =
+  base
+    div_
+    (styles (return mempty))
+    []
+    [increment, text (ms (" " ++ show m ++ " ")), decrement]
+
 view :: Model -> View Action
-view =
-  styledView $ \m ->
-    base
-      div_
-      (styles (return mempty))
-      []
-      [increment, text (ms (" " ++ show m ++ " ")), decrement]
+view = styledView app
