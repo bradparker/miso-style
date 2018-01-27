@@ -5,7 +5,7 @@ module MisoStyle.Styles.Types
   , Property(..)
   , Keyframes(..)
   , MediaScope
-  , PseudoSelector
+  , PseudoClass
   , Style(..)
   , Styles(..)
   , keyframe
@@ -43,14 +43,14 @@ newtype Keyframes =
 
 type MediaScope = Maybe MisoString
 
-type PseudoSelector = MisoString
+type PseudoClass = MisoString
 
 data Style
   = Rule MediaScope
-         [PseudoSelector]
+         [PseudoClass]
          Property
   | Animation MediaScope
-              [PseudoSelector]
+              [PseudoClass]
               Keyframes
   deriving (Show, Eq, Ord)
 
@@ -77,7 +77,7 @@ instance Monoid Styles where
   mappend (Styles a) (Styles b) = Styles (a <> b)
 
 class AcceptsProperty s where
-  addProperty :: MediaScope -> [PseudoSelector] -> Property -> s -> s
+  addProperty :: MediaScope -> [PseudoClass] -> Property -> s -> s
 
 instance AcceptsProperty Keyframe where
   addProperty _ _ p (Keyframe s ps) = Keyframe s (ps ++ [p])
@@ -85,7 +85,7 @@ instance AcceptsProperty Keyframe where
 instance AcceptsProperty Styles where
   addProperty m ss p (Styles s) = Styles (insert (Rule m ss p) s)
 
-type Builder s = ReaderT (MediaScope, [PseudoSelector]) (State s) ()
+type Builder s = ReaderT (MediaScope, [PseudoClass]) (State s) ()
 
 type AnimationBuilder = Writer [Keyframe] ()
 
@@ -104,7 +104,7 @@ animation builder = do
     (Styles s) <- get
     put (Styles (insert (Animation m ss (Keyframes (execWriter builder))) s))
 
-runBuilder :: MediaScope -> [PseudoSelector] -> s -> Builder s -> s
+runBuilder :: MediaScope -> [PseudoClass] -> s -> Builder s -> s
 runBuilder m ss s builder = execState (runReaderT builder (m, ss)) s
 
 styles :: Builder Styles -> Styles

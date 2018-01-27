@@ -11,7 +11,7 @@ import           Data.Monoid               (mconcat)
 import           Miso.String               (MisoString, pack, unpack)
 import           MisoStyle.Styles.Identify (identify)
 import           MisoStyle.Styles.Types    (Keyframe (..), Keyframes (..),
-                                            Property (..), PseudoSelector,
+                                            Property (..), PseudoClass,
                                             Style (..), Styles (..))
 import           Text.PrettyPrint          (Doc, braces, char, colon, punctuate,
                                             render, semi, space, text, (<+>),
@@ -34,9 +34,9 @@ property (Property p v) = misostring p <> colon <+> misostring v
 properties :: [Property] -> Doc
 properties = mconcat . punctuate semi . map property
 
-pseudoselectors :: [PseudoSelector] -> Doc
-pseudoselectors [] = mempty
-pseudoselectors ps =
+pseudoClasses :: [PseudoClass] -> Doc
+pseudoClasses [] = mempty
+pseudoClasses ps =
   mconcat . (char ':' :) . punctuate (char ':') . map misostring $ ps
 
 keyframe :: Keyframe -> Doc
@@ -47,7 +47,7 @@ style r@(Rule m ss p) =
   "@media" <+>
   misostring (fromMaybe "all" m) <+>
   braces
-    (char '.' <> identifier r <> pseudoselectors ss <+> braces (property p))
+    (char '.' <> identifier r <> pseudoClasses ss <+> braces (property p))
 style a@(Animation m ss (Keyframes ks)) =
   style (Rule m ss (Property "animation-name" (identify a))) <+>
   text "@keyframes" <+> identifier a <+> braces (mconcat (map keyframe ks))
