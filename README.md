@@ -18,7 +18,7 @@ module Hello (hello) where
 import Data.Monoid (<>)
 import Miso (div_)
 import MisoStyle
-  ( StyledElement
+  ( StyledView
   , Styles
   , animation
   , atmedia
@@ -46,7 +46,7 @@ helloStyles =
       (property "background-color" "seagreen")
 
 
-hello :: MisoString -> StyledElement ()
+hello :: MisoString -> StyledView ()
 hello name =
   base div_ helloStyles [] [text ("Hello, " <> name <> "!")]
 ```

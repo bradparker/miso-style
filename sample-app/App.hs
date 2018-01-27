@@ -14,7 +14,7 @@ import           Miso        (Effect, Sub, View, button_, div_, keyboardSub,
                               mouseSub, noEff, onClick)
 import qualified Miso
 import           Miso.String (ms)
-import           MisoStyle   (StyledElement, animation, animationDuration,
+import           MisoStyle   (StyledView, animation, animationDuration,
                               animationIterationCount, atmedia, backgroundColor,
                               base, color, hover, keyframe, styledView, styles,
                               text)
@@ -41,7 +41,7 @@ update (Decrement n) = noEff . subtract n
 subs :: [Sub Action Model]
 subs = [mouseSub (Increment . fst), keyboardSub (const (Decrement 100))]
 
-increment :: StyledElement Action
+increment :: StyledView Action
 increment =
   base
     button_
@@ -56,7 +56,7 @@ increment =
     [onClick (Decrement 2)]
     [text "-"]
 
-decrement :: StyledElement Action
+decrement :: StyledView Action
 decrement =
   base
     button_
@@ -68,7 +68,7 @@ decrement =
     [onClick (Increment 2)]
     [text "+"]
 
-app :: Model -> StyledElement Action
+app :: Model -> StyledView Action
 app m =
   base
     div_
