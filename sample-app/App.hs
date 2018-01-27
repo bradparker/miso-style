@@ -14,8 +14,8 @@ import           Miso        (Effect, Sub, View, button_, div_, keyboardSub,
                               mouseSub, noEff, onClick)
 import qualified Miso
 import           Miso.String (ms)
-import           MisoStyle   (animation, atmedia, base, hover, keyframe,
-                              property, styledView, styles, text)
+import           MisoStyle   (StyledElement, animation, atmedia, base, hover,
+                              keyframe, property, styledView, styles, text)
 
 type Model = Int
 
@@ -39,6 +39,35 @@ update (Decrement n) = noEff . subtract n
 subs :: [Sub Action Model]
 subs = [mouseSub (Increment . fst), keyboardSub (const (Decrement 100))]
 
+increment :: StyledElement Action
+increment =
+  base
+    button_
+    (styles $ do
+       property "color" "white"
+       property "background-color" "red"
+       property "animation-duration" "2s"
+       property "animation-iteration-count" "infinite"
+       animation $ do
+         keyframe "0%" (property "background-color" "coral")
+         keyframe "100%" (property "background-color" "red"))
+    [onClick (Decrement 2)]
+    [text "-"]
+
+decrement :: StyledElement Action
+decrement =
+  base
+    button_
+    (styles $ do
+       property "color" "white"
+       property "background-color" "green"
+       hover (property "background-color" "seagreen")
+       atmedia
+         "screen and (min-width: 400px)"
+         (property "background-color" "blue"))
+    [onClick (Increment 2)]
+    [text "+"]
+
 view :: Model -> View Action
 view =
   styledView $ \m ->
@@ -46,29 +75,4 @@ view =
       div_
       (styles (return mempty))
       []
-      [ base
-          button_
-          (styles $ do
-             property "color" "white"
-             property "background-color" "red"
-             property "animation-duration" "2s"
-             property "animation-iteration-count" "infinite"
-             animation
-               [ keyframe "0%" (property "background-color" "coral")
-               , keyframe "100%" (property "background-color" "red")
-               ])
-          [onClick (Decrement 2)]
-          [text "-"]
-      , text (ms (" " ++ show m ++ " "))
-      , base
-          button_
-          (styles $ do
-             property "color" "white"
-             property "background-color" "green"
-             hover (property "background-color" "seagreen")
-             atmedia
-               "screen and (min-width: 400px)"
-               (property "background-color" "blue"))
-          [onClick (Increment 2)]
-          [text "+"]
-      ]
+      [increment, text (ms (" " ++ show m ++ " ")), decrement]

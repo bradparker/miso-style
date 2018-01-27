@@ -21,6 +21,7 @@ import           Control.Lens               (over, _1, _2)
 import           Control.Monad.Trans.Class  (lift)
 import           Control.Monad.Trans.Reader (ReaderT, ask, local, runReaderT)
 import           Control.Monad.Trans.State  (State, execState, get, modify, put)
+import           Control.Monad.Trans.Writer (Writer, execWriter, tell)
 import           Data.Hashable              (Hashable, hashWithSalt)
 import           Data.Monoid                ((<>))
 import           Data.Set                   (Set, insert)
@@ -84,29 +85,27 @@ instance AcceptsProperty Keyframe where
 instance AcceptsProperty Styles where
   addProperty m ss p (Styles s) = Styles (insert (Rule m ss p) s)
 
-type Builder s
-   = ReaderT ( MediaScope
-             , [PseudoSelector]
-             , MediaScope -> [PseudoSelector] -> Property -> s -> s) (State s) ()
+type Builder s = ReaderT (MediaScope, [PseudoSelector]) (State s) ()
 
-property :: MisoString -> MisoString -> Builder s
+type AnimationBuilder = Writer [Keyframe] ()
+
+property :: AcceptsProperty s => MisoString -> MisoString -> Builder s
 property p v = do
-  (m, ss, addProp) <- ask
-  lift (modify (addProp m ss (Property p v)))
+  (m, ss) <- ask
+  lift (modify (addProperty m ss (Property p v)))
 
-keyframe :: MisoString -> Builder Keyframe -> Keyframe
-keyframe stop = runBuilder Nothing [] (Keyframe stop [])
+keyframe :: MisoString -> Builder Keyframe -> AnimationBuilder
+keyframe stop = tell . pure . runBuilder Nothing [] (Keyframe stop [])
 
-animation :: [Keyframe] -> Builder Styles
-animation ks = do
-  (m, ss, _) <- ask
-  (Styles s) <- lift get
-  lift (put (Styles (insert (Animation m ss (Keyframes ks)) s)))
+animation :: AnimationBuilder -> Builder Styles
+animation builder = do
+  (m, ss) <- ask
+  lift $ do
+    (Styles s) <- get
+    put (Styles (insert (Animation m ss (Keyframes (execWriter builder))) s))
 
-runBuilder ::
-     AcceptsProperty s => MediaScope -> [PseudoSelector] -> s -> Builder s -> s
-runBuilder m ss s builder =
-  execState (runReaderT builder (m, ss, addProperty)) s
+runBuilder :: MediaScope -> [PseudoSelector] -> s -> Builder s -> s
+runBuilder m ss s builder = execState (runReaderT builder (m, ss)) s
 
 styles :: Builder Styles -> Styles
 styles = runBuilder Nothing [] mempty

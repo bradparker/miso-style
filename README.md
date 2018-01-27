@@ -1,6 +1,6 @@
 # Miso Styling Experiment
 
-*N.B.* at this point this is for my own curiousity and learning. The api ... is a little weird and will change :).
+*N.B.* at this point this is for my own curiousity and learning.
 
 CSS in JS in the style of Fela and Aphrodite, but in Haskell and specifically for the Miso framework.
 
@@ -38,10 +38,9 @@ helloStyles =
     property "background-color" "coral"
     property "animation-duration" "2s"
     property "animation-iteration-count" "infinite"
-    animation
-      [ keyframe "0%" (property "opacity" "0.5")
-      , keyframe "100%" (property "opacity" "1")
-      ]
+    animation $ do
+      keyframe "0%" (property "opacity" "0.5")
+      keyframe "100%" (property "opacity" "1")
     atmedia
       "screen and (min-width: 400px)"
       (property "background-color" "seagreen")
