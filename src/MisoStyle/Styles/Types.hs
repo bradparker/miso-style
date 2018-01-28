@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module MisoStyle.Styles.Types
   ( Keyframe(..)
   , Property(..)
@@ -15,15 +13,14 @@ module MisoStyle.Styles.Types
   , styles
   , atmedia
   , pseudo
-  , hover
   , property
   ) where
 
-import           Control.Lens               (over, _1, _2)
 import           Control.Monad.Trans.Class  (lift)
 import           Control.Monad.Trans.Reader (ReaderT, ask, local, runReaderT)
 import           Control.Monad.Trans.State  (State, execState, get, modify, put)
 import           Control.Monad.Trans.Writer (Writer, execWriter, tell)
+import           Data.Bifunctor             (first, second)
 import           Data.Hashable              (Hashable, hashWithSalt)
 import           Data.Monoid                ((<>))
 import           Data.Set                   (Set, insert)
@@ -113,10 +110,7 @@ styles :: Builder Styles -> Styles
 styles = runBuilder Nothing [] mempty
 
 atmedia :: MisoString -> Builder Styles -> Builder Styles
-atmedia = local . over _1 . const . Just
+atmedia = local . first . const . Just
 
 pseudo :: MisoString -> Builder Styles -> Builder Styles
-pseudo = local . over _2 . (++) . pure
-
-hover :: Builder Styles -> Builder Styles
-hover = pseudo "hover"
+pseudo = local . second . (++) . pure

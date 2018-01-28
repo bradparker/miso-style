@@ -21,10 +21,16 @@ import MisoStyle
   ( StyledView
   , Styles
   , animation
+  , animationDuration
+  , animationIterationCount
   , atmedia
+  , backgroundColor
   , base
+  , borderRadius
+  , color
   , keyframe
-  , property
+  , opacity
+  , padding
   , styles
   , text
   )
@@ -32,19 +38,16 @@ import MisoStyle
 helloStyles :: Styles
 helloStyles =
   styles $ do
-    property "color" "white"
-    property "padding" "1rem"
-    property "border-raduis" "1rem"
-    property "background-color" "coral"
-    property "animation-duration" "2s"
-    property "animation-iteration-count" "infinite"
+    color "white"
+    padding "1rem"
+    borderRadius "1rem"
+    backgroundColor "coral"
+    animationDuration "2s"
+    animationIterationCount "infinite"
     animation $ do
-      keyframe "0%" (property "opacity" "0.5")
-      keyframe "100%" (property "opacity" "1")
-    atmedia
-      "screen and (min-width: 400px)"
-      (property "background-color" "seagreen")
-
+      keyframe "0%" (opacity "0.5")
+      keyframe "100%" (opacity "1")
+    atmedia "screen and (min-width: 400px)" (backgroundColor "seagreen")
 
 hello :: MisoString -> StyledView ()
 hello name =
