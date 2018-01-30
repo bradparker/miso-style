@@ -1,16 +1,3 @@
-# Miso Styling Experiment
-
-*N.B.* at this point this is for my own curiousity and learning.
-
-CSS in JS in the style of Fela and Aphrodite, but in Haskell and specifically for the Miso framework.
-
-## Usage
-
-The `MisoStyle` module exports a function called `base` (this is a silly name) it wraps existing Miso element functions so that they become "style-aware". Elements wrapped by base take an extra arg, a `Styles` value, which is a set of CSS rules you'd like to apply to this element.
-
-It looks like this:
-
-```haskell
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main
@@ -64,4 +51,3 @@ main =
     , subs = []
     , mountPoint = Nothing
     }
-```

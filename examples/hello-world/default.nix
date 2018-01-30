@@ -12,6 +12,10 @@ let
     sha256 = "18jhr1ihf0vwwvp134j24isvzq699x5iy7l9ihrah760zmcxi7d2";
     rev = "e3d3d874337a4a44adc4b6bdb8b18d907c6c1e34";
   }) {};
-in pkgs.haskell.packages.ghc802.callPackage ./miso-style.nix {
-  miso = misoPkg.miso-ghc;
+  misoStyle = pkgs.haskell.packages.ghcjs.callPackage ../../miso-style.nix {
+    miso = misoPkg.miso-ghcjs;
+  };
+in pkgs.haskell.packages.ghcjs.callPackage ./hello-world.nix {
+  miso = misoPkg.miso-ghcjs;
+  miso-style = misoStyle;
 }
