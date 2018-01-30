@@ -65,3 +65,25 @@ main =
     , mountPoint = Nothing
     }
 ```
+
+## Development
+
+### System requirements
+
+* Nix
+* Cabal (`nix-env -i cabal-install`)
+
+### Running the tests
+
+```
+ » nix-shell -A env --run "cabal test --show-details=always"
+```
+
+### Viewing the sample app
+
+```
+ » cd examples/hello-world
+ » nix-shell -A env --run "cabal build"
+ » cd dist/build/hello-world/hello-world.jsexe/
+ » python -m SimpleHTTPServer
+```
