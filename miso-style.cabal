@@ -35,7 +35,8 @@ library
     containers,
     miso,
     hashable,
-    pretty
+    pretty,
+    dlist
 
 test-suite tests
   type: exitcode-stdio-1.0
