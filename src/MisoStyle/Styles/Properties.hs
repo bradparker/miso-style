@@ -86,8 +86,7 @@ module MisoStyle.Styles.Properties
   ) where
 
 import           Miso.String            (MisoString)
-import           MisoStyle.Styles.Types (AcceptsProperty, Builder, Styles,
-                                         property)
+import           MisoStyle.Styles.Types (AcceptsProperty, Builder, property)
 
 animationDelay :: AcceptsProperty s => MisoString -> Builder s
 animationDelay = property "animation-delay"

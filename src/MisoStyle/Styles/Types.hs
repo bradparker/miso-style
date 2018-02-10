@@ -21,8 +21,8 @@ import           Control.Monad.Trans.Reader (ReaderT, ask, local, runReaderT)
 import           Control.Monad.Trans.State  (State, execState, get, modify, put)
 import           Control.Monad.Trans.Writer (Writer, execWriter, tell)
 import           Data.Bifunctor             (first, second)
-import           Data.DList                 (DList)
-import           Data.Hashable              (Hashable, hashWithSalt)
+import           Data.Hashable              (Hashable, hash, hashWithSalt)
+import           Data.IntMap                (IntMap, insert)
 import           Data.Monoid                ((<>))
 import           Miso.String                (MisoString, unpack)
 
@@ -54,8 +54,11 @@ data Style
   deriving (Show, Eq, Ord)
 
 newtype Styles = Styles
-  { unStyles :: DList Style
+  { unStyles :: IntMap Style
   } deriving (Show, Eq, Ord)
+
+insertStyle :: Style -> Styles -> Styles
+insertStyle s (Styles ss) = Styles (insert (hash s) s ss)
 
 instance Hashable Property where
   hashWithSalt s (Property p v) = hashWithSalt s (unpack p, unpack v)
@@ -82,7 +85,7 @@ instance AcceptsProperty Keyframe where
   addProperty _ _ p (Keyframe s ps) = Keyframe s (ps ++ [p])
 
 instance AcceptsProperty Styles where
-  addProperty m ss p (Styles s) = Styles (s <> pure (Rule m ss p))
+  addProperty m ss p = insertStyle (Rule m ss p)
 
 type Builder s = ReaderT (MediaScope, [PseudoClass]) (State s) ()
 
@@ -100,8 +103,8 @@ animation :: AnimationBuilder -> Builder Styles
 animation builder = do
   (m, ss) <- ask
   lift $ do
-    (Styles s) <- get
-    put (Styles (s <> pure (Animation m ss (Keyframes (execWriter builder)))))
+    s <- get
+    put (insertStyle (Animation m ss (Keyframes (execWriter builder))) s)
 
 runBuilder :: MediaScope -> [PseudoClass] -> s -> Builder s -> s
 runBuilder m ss s builder = execState (runReaderT builder (m, ss)) s

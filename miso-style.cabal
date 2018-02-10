@@ -21,7 +21,6 @@ library
     MisoStyle
     MisoStyle.Base
     MisoStyle.Styles.Types
-    MisoStyle.Styles.Identify
     MisoStyle.Styles.Properties
     MisoStyle.Styles.PseudoClasses
     MisoStyle.Styles.Print
@@ -35,8 +34,7 @@ library
     containers,
     miso,
     hashable,
-    pretty,
-    dlist
+    text
 
 test-suite tests
   type: exitcode-stdio-1.0

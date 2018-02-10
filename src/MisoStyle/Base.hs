@@ -8,16 +8,11 @@ module MisoStyle.Base
   ) where
 
 import           Control.Monad.Trans.Writer (Writer, runWriter, tell, writer)
-import           Data.DList                 (cons)
-import           Data.Set                   (insert)
 import           Miso                       (Attribute, View)
 import qualified Miso
 import           Miso.String                (MisoString)
-import           MisoStyle.Styles           (renderClasses, renderStyles)
-import           MisoStyle.Styles.Types     (Styles (..))
-
-uniq :: Styles -> Styles
-uniq = Styles . foldr cons mempty . foldr insert mempty . unStyles
+import           MisoStyle.Styles           (Styles, renderClasses,
+                                             renderStyles)
 
 type Element action = [Attribute action] -> [View action] -> View action
 
@@ -37,7 +32,7 @@ text :: MisoString -> StyledView action
 text str = writer (Miso.text str, mempty)
 
 style :: Styles -> View action
-style styles = Miso.nodeHtml "style" [] [Miso.text (renderStyles (uniq styles))]
+style styles = Miso.nodeHtml "style" [] [Miso.text (renderStyles styles)]
 
 styledView :: (model -> StyledView action) -> model -> View action
 styledView sv model = Miso.div_ [] [style styles, app]
