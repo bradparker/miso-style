@@ -5,77 +5,61 @@ module MisoStyle.Styles.Print
   , renderClasses
   ) where
 
-import           Data.Foldable              (toList)
-import           Data.IntMap                (Key, keys, mapWithKey)
-import           Data.List                  (intersperse)
-import           Data.Maybe                 (fromMaybe)
-import           Data.Monoid                (mconcat, (<>))
-import           Data.Text.Lazy.Builder     (Builder, fromText, singleton,
-                                             toLazyText)
-import           Data.Text.Lazy.Builder.Int (decimal)
-import           Miso.String                (MisoString, fromMisoString,
-                                             toMisoString)
-import           MisoStyle.Styles.Types     (Keyframe (..), Keyframes (..),
-                                             Property (..), PseudoClass,
-                                             Style (..), Styles (..))
+import           Data.Foldable          (toList)
+import           Data.IntMap            (Key, keys, mapWithKey)
+import           Data.List              (intersperse)
+import           Data.Maybe             (fromMaybe)
+import           Data.Monoid            (mconcat, (<>))
+import           Miso.String            (MisoString, toMisoString)
+import           MisoStyle.Styles.Types (Keyframe (..), Keyframes (..),
+                                         Property (..), PseudoClass, Style (..),
+                                         Styles (..))
 
-(<+>) :: Builder -> Builder -> Builder
+(<+>) :: MisoString -> MisoString -> MisoString
 a <+> b = a <> space <> b
 
-space :: Builder
-space = singleton ' '
+space :: MisoString
+space = " "
 
-colon :: Builder
-colon = singleton ':'
+colon :: MisoString
+colon = ":"
 
-semi :: Builder
-semi = singleton ';'
+semi :: MisoString
+semi = ";"
 
-braces :: Builder -> Builder
-braces b = singleton '{' <> b <> singleton '}'
+braces :: MisoString -> MisoString
+braces b = "{" <> b <> "}"
 
-punctuate :: Builder -> [Builder] -> Builder
+punctuate :: MisoString -> [MisoString] -> MisoString
 punctuate b = mconcat . intersperse b
 
-className :: Key -> MisoString
-className = toMisoString . toLazyText . identifier
+identifier :: Key -> MisoString
+identifier = ("m" <>) . toMisoString . show
 
-identifier :: Key -> Builder
-identifier = (singleton 'm' <>) . decimal
+property :: Property -> MisoString
+property (Property p v) = p <> colon <+> v
 
-misostring :: MisoString -> Builder
-misostring = fromText . fromMisoString
-
-property :: Property -> Builder
-property (Property p v) = misostring p <> colon <+> misostring v
-
-properties :: [Property] -> Builder
+properties :: [Property] -> MisoString
 properties = punctuate semi . map property
 
-pseudoClasses :: [PseudoClass] -> Builder
+pseudoClasses :: [PseudoClass] -> MisoString
 pseudoClasses [] = mempty
-pseudoClasses ps =
-  (singleton ':' <>) . punctuate (singleton ':') . map misostring $ ps
+pseudoClasses ps = colon <> punctuate colon ps
 
-keyframe :: Keyframe -> Builder
-keyframe (Keyframe s b) = misostring s <+> braces (properties b)
+keyframe :: Keyframe -> MisoString
+keyframe (Keyframe s b) = s <+> braces (properties b)
 
-style :: Key -> Style -> Builder
+style :: Key -> Style -> MisoString
 style k (Rule m ss p) =
   "@media" <+>
-  misostring (fromMaybe "all" m) <+>
-  braces
-    (singleton '.' <> identifier k <> pseudoClasses ss <+> braces (property p))
+  fromMaybe "all" m <+>
+  braces ("." <> identifier k <> pseudoClasses ss <+> braces (property p))
 style k (Animation m ss (Keyframes ks)) =
-  style k (Rule m ss (Property "animation-name" (className k))) <+>
-  fromText "@keyframes" <+> identifier k <+> braces (mconcat (map keyframe ks))
+  style k (Rule m ss (Property "animation-name" (identifier k))) <+>
+  "@keyframes" <+> identifier k <+> braces (mconcat (map keyframe ks))
 
 renderStyles :: Styles -> MisoString
-renderStyles =
-  toMisoString .
-  toLazyText . punctuate space . toList . mapWithKey style . unStyles
+renderStyles = punctuate space . toList . mapWithKey style . unStyles
 
 renderClasses :: Styles -> MisoString
-renderClasses =
-  toMisoString .
-  toLazyText . punctuate space . toList . map identifier . keys . unStyles
+renderClasses = punctuate space . map identifier . keys . unStyles
