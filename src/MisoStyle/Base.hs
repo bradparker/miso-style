@@ -7,12 +7,13 @@ module MisoStyle.Base
   , StyledView
   ) where
 
-import           Control.Monad.Trans.Writer (Writer, runWriter, tell, writer)
-import           Miso                       (Attribute, View)
+import           Control.Monad.Trans.Writer.Strict (Writer, runWriter, tell,
+                                                    writer)
+import           Miso                              (Attribute, View)
 import qualified Miso
-import           Miso.String                (MisoString)
-import           MisoStyle.Styles           (Styles, renderClasses,
-                                             renderStyles)
+import           Miso.String                       (MisoString)
+import           MisoStyle.Styles                  (Styles, renderClasses,
+                                                    renderStyles)
 
 type Element action = [Attribute action] -> [View action] -> View action
 
