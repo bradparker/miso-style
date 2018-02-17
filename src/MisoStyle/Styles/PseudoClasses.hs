@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module MisoStyle.Styles.PseudoClasses
   ( hover
   ) where

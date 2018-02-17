@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module MisoStyle.Styled
   ( styled
   , unstyled

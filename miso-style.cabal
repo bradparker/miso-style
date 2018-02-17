@@ -24,6 +24,8 @@ library
     MisoStyle.Styles.Properties
     MisoStyle.Styles.PseudoClasses
     MisoStyle.Styles.Print
+  default-extensions:
+    OverloadedStrings
   ghc-options:
     -Wall
   hs-source-dirs:
