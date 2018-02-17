@@ -11,16 +11,16 @@ import           Control.Monad (mapM)
 import           Data.Bool     (bool)
 import           Data.Foldable (foldr)
 import           Data.List     (intersperse, length, zipWith)
-import           Data.Monoid   (mconcat, mempty, (<>))
+import           Data.Monoid   (mconcat, (<>))
 import           Data.Vector   (Vector, (!))
 import qualified Data.Vector   as Vector
 import           Miso          (Attribute, View, a_, button_, class_,
                                 defaultEvents, div_, h1_, href_, id_, onClick,
                                 span_, table_, tbody_, td_, tr_, type_)
 import           Miso.String   (MisoString, ms)
-import           MisoStyle     (StyledView, Styles, base, borderTop, color,
-                                hover, lineHeight, marginBottom, padding,
-                                property, styledView, styles, text,
+import           MisoStyle     (StyledView, Styles, borderTop, color, hover,
+                                lineHeight, marginBottom, padding, property,
+                                styled, styledView, styles, text,
                                 textDecoration, verticalAlign, width)
 import           System.Random (randomRIO)
 
@@ -105,34 +105,33 @@ anchorStyles =
 
 row :: Row -> StyledView ()
 row Row {_id, label} =
-  base
+  unstyled
     tr_
-    mempty
     []
-    [ base
+    [ styled
         td_
         (tdStyles <> styles (width "8.33333333%"))
         []
         [text (ms (show _id))]
-    , base td_ tdStyles [] [base a_ anchorStyles [href_ "#"] [text label]]
-    , base
+    , styled td_ tdStyles [] [styled a_ anchorStyles [href_ "#"] [text label]]
+    , styled
         td_
         tdStyles
         []
-        [base a_ anchorStyles [href_ "#"] [base span_ mempty [] []]]
-    , base td_ tdStyles [] []
+        [styled a_ anchorStyles [href_ "#"] [unstyled span_ [] []]]
+    , styled td_ tdStyles [] []
     ]
 
 view :: Model -> StyledView ()
 view Model {rows} =
-  base
+  styled
     table_
     (styles $ do
        width "100%"
        property "max-width" "100%"
        marginBottom "20px")
     []
-    [base tbody_ mempty [] (map row rows)]
+    [unstyled tbody_ [] (map row rows)]
 
 generateRows :: Int -> IO [Row]
 generateRows count =

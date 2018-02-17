@@ -10,8 +10,8 @@ import           Miso        (App (..), Effect, View, defaultEvents, div_,
 import           Miso.String (MisoString)
 import           MisoStyle   (StyledView, Styles, animation, animationDuration,
                               animationIterationCount, atmedia, backgroundColor,
-                              base, borderRadius, color, keyframe, opacity,
-                              padding, styledView, styles, text)
+                              borderRadius, color, keyframe, opacity, padding,
+                              styled, styledView, styles, text)
 
 helloStyles :: Styles
 helloStyles =
@@ -28,7 +28,7 @@ helloStyles =
     atmedia "screen and (min-width: 400px)" (backgroundColor "seagreen")
 
 hello :: MisoString -> StyledView ()
-hello name = base div_ helloStyles [] [text ("Hello, " <> name <> "!")]
+hello name = styled div_ helloStyles [] [text ("Hello, " <> name <> "!")]
 
 initialModel :: MisoString
 initialModel = "World"

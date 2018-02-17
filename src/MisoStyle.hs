@@ -1,7 +1,7 @@
 module MisoStyle
-  ( module MisoStyle.Base
+  ( module MisoStyle.Styled
   , module MisoStyle.Styles
   ) where
 
-import           MisoStyle.Base
+import           MisoStyle.Styled
 import           MisoStyle.Styles

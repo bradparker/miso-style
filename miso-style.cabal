@@ -19,7 +19,7 @@ library
     Haskell2010
   exposed-modules:
     MisoStyle
-    MisoStyle.Base
+    MisoStyle.Styled
     MisoStyle.Styles.Types
     MisoStyle.Styles.Properties
     MisoStyle.Styles.PseudoClasses

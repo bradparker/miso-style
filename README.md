@@ -6,7 +6,7 @@ CSS in JS in the style of Fela and Aphrodite, but in Haskell and specifically fo
 
 ## Usage
 
-The `MisoStyle` module exports a function called `base` (this is a silly name) it wraps existing Miso element functions so that they become "style-aware". Elements wrapped by base take an extra arg, a `Styles` value, which is a set of CSS rules you'd like to apply to this element.
+The `MisoStyle` module exports a function called `styled` it wraps existing Miso element functions so that they become "style-aware". Elements wrapped by styled take an extra arg, a `Styles` value, which is a set of CSS rules you'd like to apply to this element.
 
 It looks like this:
 
@@ -23,7 +23,7 @@ import           Miso        (App (..), Effect, View, defaultEvents, div_,
 import           Miso.String (MisoString)
 import           MisoStyle   (StyledView, Styles, animation, animationDuration,
                               animationIterationCount, atmedia, backgroundColor,
-                              base, borderRadius, color, keyframe, opacity,
+                              styled, borderRadius, color, keyframe, opacity,
                               padding, styledView, styles, text)
 
 helloStyles :: Styles
@@ -41,7 +41,7 @@ helloStyles =
     atmedia "screen and (min-width: 400px)" (backgroundColor "seagreen")
 
 hello :: MisoString -> StyledView ()
-hello name = base div_ helloStyles [] [text ("Hello, " <> name <> "!")]
+hello name = styled div_ helloStyles [] [text ("Hello, " <> name <> "!")]
 
 initialModel :: MisoString
 initialModel = "World"
