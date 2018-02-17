@@ -59,7 +59,7 @@ newtype Styles = Styles
   } deriving (Show, Eq, Ord)
 
 insertStyle :: Style -> Styles -> Styles
-insertStyle s (Styles ss) = Styles (snoc ss ((hash s), s))
+insertStyle s (Styles ss) = Styles (snoc ss (hash s, s))
 
 instance Hashable Property where
   hashWithSalt s (Property p v) = hashWithSalt s (unpack p, unpack v)
