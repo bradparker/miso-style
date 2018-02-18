@@ -4,8 +4,7 @@ module MisoStyle.Styles.Print
   ) where
 
 import           Data.Foldable          (foldr)
-import           Data.IntMap            (IntMap, Key, foldWithKey)
-import           Data.IntMap            (insert)
+import           Data.IntMap            (IntMap, Key, foldrWithKey, insert)
 import           Data.List              (intersperse)
 import           Data.Maybe             (fromMaybe)
 import           Data.Monoid            (mconcat, (<>))
@@ -61,7 +60,8 @@ style k (Animation m ss (Keyframes ks)) =
   "@keyframes" <+> identifier k <+> braces (mconcat (map keyframe ks))
 
 renderStyles :: Styles -> MisoString
-renderStyles = foldWithKey (\key val acc -> style key val <+> acc) "" . toIntMap
+renderStyles =
+  foldrWithKey (\key val acc -> style key val <+> acc) "" . toIntMap
 
 renderClasses :: Styles -> MisoString
 renderClasses = foldr ((<+>) . identifier . fst) "" . unStyles

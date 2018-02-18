@@ -31,14 +31,14 @@ styled ::
   -> StyledView action
 styled element styles attrs children = do
   (renderedClasses, currentStyles) <- get
-  let identifier = hash (foldr ((:) . fst) [] (unStyles styles))
-      existing = lookup identifier renderedClasses
-  case existing of
+  case (lookup identifier renderedClasses) of
     Just classes -> element (Miso.class_ classes : attrs) <$> sequence children
     Nothing -> do
       let classes = renderClasses styles
       put (insert identifier classes renderedClasses, currentStyles <> styles)
       element (Miso.class_ classes : attrs) <$> sequence children
+  where
+    identifier = hash (foldr ((:) . fst) [] (unStyles styles))
 
 text :: MisoString -> StyledView action
 text = return . Miso.text
