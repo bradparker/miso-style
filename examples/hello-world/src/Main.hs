@@ -10,16 +10,18 @@ import           Miso        (App (..), Effect, View, defaultEvents, div_,
 import           Miso.String (MisoString)
 import           MisoStyle   (StyledView, Styles, animation, animationDuration,
                               animationIterationCount, atmedia, backgroundColor,
-                              borderRadius, color, keyframe, opacity, padding,
-                              styled, styledView, styles, text)
+                              borderRadius, color, fontFamily, keyframe,
+                              opacity, padding, styled, styledView, styles,
+                              text)
 
 helloStyles :: Styles
 helloStyles =
   styles $ do
-    color "white"
-    padding "1rem"
-    borderRadius "1rem"
     backgroundColor "coral"
+    borderRadius "0.5rem"
+    color "white"
+    fontFamily "sans-serif"
+    padding "1rem"
     animationDuration "2s"
     animationIterationCount "infinite"
     animation $ do
