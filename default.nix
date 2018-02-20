@@ -1,8 +1,19 @@
-{ pkgs ? import ((import <nixpkgs> {}).fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "a0aeb23";
-    sha256 = "04dgg0f2839c1kvlhc45hcksmjzr8a22q1bgfnrx71935ilxl33d";
-  }){}
-}:
-pkgs.haskell.packages.ghc802.callPackage ./miso-style.nix {}
+with import <nixpkgs> {};
+{ nixpkgs ? import (fetchgit {
+    inherit (builtins.fromJSON (builtins.readFile ./nixpkgs.json)) url rev sha256;
+  }) {},
+  compiler ? "default" }:
+let
+  haskellPackages = if compiler == "default"
+    then nixpkgs.haskellPackages
+    else nixpkgs.haskell.packages.${compiler};
+  misosrc = fetchgit {
+    inherit (builtins.fromJSON (builtins.readFile ./miso.json)) url rev sha256;
+  };
+  miso = if compiler == "ghcjs" || compiler == "ghcjsHEAD"
+    then haskellPackages.callPackage (misosrc + "/miso-ghcjs.nix") {}
+    else haskellPackages.callPackage (misosrc + "/miso-ghc.nix") {};
+in
+  haskellPackages.callPackage ./miso-style.nix {
+    miso = miso;
+  }
