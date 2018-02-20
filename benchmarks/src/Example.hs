@@ -21,7 +21,7 @@ import           Miso.String   (MisoString, ms)
 import           MisoStyle     (StyledView, Styles, borderTop, color, hover,
                                 lineHeight, marginBottom, padding, property,
                                 styled, styledView, styles, text,
-                                textDecoration, verticalAlign, width)
+                                textDecoration, unstyled, verticalAlign, width)
 import           System.Random (randomRIO)
 
 adjectives :: Vector MisoString

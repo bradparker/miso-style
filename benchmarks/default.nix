@@ -1,20 +1,16 @@
-{ pkgs ? import ((import <nixpkgs> {}).fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "a0aeb23";
-    sha256 = "04dgg0f2839c1kvlhc45hcksmjzr8a22q1bgfnrx71935ilxl33d";
-  }){}
-}:
+with import <nixpkgs> {};
+{ nixpkgs ? import (fetchgit {
+    inherit (builtins.fromJSON (builtins.readFile ../nixpkgs.json)) url rev sha256;
+  }) {} }:
 let
-  misoPkg = import (pkgs.fetchFromGitHub {
-    owner = "dmjio";
-    repo = "miso";
-    sha256 = "18jhr1ihf0vwwvp134j24isvzq699x5iy7l9ihrah760zmcxi7d2";
-    rev = "e3d3d874337a4a44adc4b6bdb8b18d907c6c1e34";
-  }) {};
-in pkgs.haskell.packages.ghcjs.callPackage ./benchmarks.nix {
-  miso = misoPkg.miso-ghcjs;
-  miso-style = pkgs.haskell.packages.ghcjs.callPackage ../miso-style.nix {
-    miso = misoPkg.miso-ghcjs;
+  haskellPackages = pkgs.haskell.packages.ghcjs;
+  miso = haskellPackages.callPackage ((fetchgit {
+    inherit (builtins.fromJSON (builtins.readFile ../miso.json)) url rev sha256;
+  }) + "/miso-ghcjs.nix") {};
+  miso-style = haskellPackages.callPackage ../miso-style.nix {
+    miso = miso;
   };
+in haskellPackages.callPackage ./benchmarks.nix {
+  miso = miso;
+  miso-style = miso-style;
 }
