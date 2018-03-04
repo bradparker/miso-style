@@ -2,7 +2,7 @@ module MisoStyle.Styles.PseudoClasses
   ( hover
   ) where
 
-import           MisoStyle.Styles.Types (Builder, Styles, pseudo)
+import           MisoStyle.Styles.Types (StyleBuilder, Styles, pseudo)
 
-hover :: Builder Styles -> Builder Styles
+hover :: StyleBuilder Styles -> StyleBuilder Styles
 hover = pseudo "hover"

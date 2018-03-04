@@ -1,5 +1,7 @@
 module MisoStyle.Styles
   ( Styles
+  , StyleBuilder
+  , AcceptsProperty
   , property
   , animation
   , atmedia
@@ -14,5 +16,6 @@ module MisoStyle.Styles
 import           MisoStyle.Styles.Print         (renderClasses, renderStyles)
 import           MisoStyle.Styles.Properties    as Properties
 import           MisoStyle.Styles.PseudoClasses as PseudoClasses
-import           MisoStyle.Styles.Types         (Styles, animation, atmedia,
+import           MisoStyle.Styles.Types         (AcceptsProperty, StyleBuilder,
+                                                 Styles, animation, atmedia,
                                                  keyframe, property, styles)

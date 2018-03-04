@@ -7,7 +7,7 @@ module MisoStyle.Styles.Types
   , Style(..)
   , Styles(..)
   , AcceptsProperty
-  , Builder
+  , StyleBuilder
   , keyframe
   , animation
   , styles
@@ -92,33 +92,33 @@ instance AcceptsProperty Keyframe where
 instance AcceptsProperty Styles where
   addProperty m ss p = insertStyle (Rule m ss p)
 
-type Builder s = ReaderT (MediaScope, [PseudoClass]) (State s) ()
+type StyleBuilder s = ReaderT (MediaScope, [PseudoClass]) (State s) ()
 
-type AnimationBuilder = Writer [Keyframe] ()
+type AnimationStyleBuilder = Writer [Keyframe] ()
 
-property :: AcceptsProperty s => MisoString -> MisoString -> Builder s
+property :: AcceptsProperty s => MisoString -> MisoString -> StyleBuilder s
 property p v = do
   (m, ss) <- ask
   lift (modify (addProperty m ss (Property p v)))
 
-keyframe :: MisoString -> Builder Keyframe -> AnimationBuilder
-keyframe stop = tell . pure . runBuilder Nothing [] (Keyframe stop [])
+keyframe :: MisoString -> StyleBuilder Keyframe -> AnimationStyleBuilder
+keyframe stop = tell . pure . runStyleBuilder Nothing [] (Keyframe stop [])
 
-animation :: AnimationBuilder -> Builder Styles
+animation :: AnimationStyleBuilder -> StyleBuilder Styles
 animation builder = do
   (m, ss) <- ask
   lift $ do
     s <- get
     put (insertStyle (Animation m ss (Keyframes (execWriter builder))) s)
 
-runBuilder :: MediaScope -> [PseudoClass] -> s -> Builder s -> s
-runBuilder m ss s builder = execState (runReaderT builder (m, ss)) s
+runStyleBuilder :: MediaScope -> [PseudoClass] -> s -> StyleBuilder s -> s
+runStyleBuilder m ss s builder = execState (runReaderT builder (m, ss)) s
 
-styles :: Builder Styles -> Styles
-styles = runBuilder Nothing [] mempty
+styles :: StyleBuilder Styles -> Styles
+styles = runStyleBuilder Nothing [] mempty
 
-atmedia :: MisoString -> Builder Styles -> Builder Styles
+atmedia :: MisoString -> StyleBuilder Styles -> StyleBuilder Styles
 atmedia = local . first . const . Just
 
-pseudo :: MisoString -> Builder Styles -> Builder Styles
+pseudo :: MisoString -> StyleBuilder Styles -> StyleBuilder Styles
 pseudo = local . second . (++) . pure
