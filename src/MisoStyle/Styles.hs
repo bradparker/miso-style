@@ -5,6 +5,7 @@ module MisoStyle.Styles
   , property
   , animation
   , atmedia
+  , pseudo
   , styles
   , keyframe
   , renderClasses
@@ -18,4 +19,5 @@ import           MisoStyle.Styles.Properties    as Properties
 import           MisoStyle.Styles.PseudoClasses as PseudoClasses
 import           MisoStyle.Styles.Types         (AcceptsProperty, StyleBuilder,
                                                  Styles, animation, atmedia,
-                                                 keyframe, property, styles)
+                                                 keyframe, property, pseudo,
+                                                 styles)
