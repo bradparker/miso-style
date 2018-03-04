@@ -3,18 +3,14 @@ module MisoStyle.Styles.Print
   , renderClasses
   ) where
 
-import           Data.Foldable          (foldr)
-import           Data.IntMap            (IntMap, Key, foldrWithKey, insert)
+import           Data.IntMap            (Key, foldrWithKey, keys)
 import           Data.List              (intersperse)
 import           Data.Maybe             (fromMaybe)
-import           Data.Monoid            (mconcat, (<>))
+import           Data.Monoid            ((<>))
 import           Miso.String            (MisoString, toMisoString)
 import           MisoStyle.Styles.Types (Keyframe (..), Keyframes (..),
                                          Property (..), PseudoClass, Style (..),
                                          Styles (..))
-
-toIntMap :: Styles -> IntMap Style
-toIntMap = foldr (uncurry insert) mempty . unStyles
 
 (<+>) :: MisoString -> MisoString -> MisoString
 a <+> b = a <> space <> b
@@ -61,7 +57,7 @@ style k (Animation m ss (Keyframes ks)) =
 
 renderStyles :: Styles -> MisoString
 renderStyles =
-  foldrWithKey (\key val acc -> style key val <+> acc) "" . toIntMap
+  foldrWithKey (\key val acc -> style key val <+> acc) "" . unStyles
 
 renderClasses :: Styles -> MisoString
-renderClasses = foldr ((<+>) . identifier . fst) "" . unStyles
+renderClasses = foldr ((<+>) . identifier) "" . keys . unStyles

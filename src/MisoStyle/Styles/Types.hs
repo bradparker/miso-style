@@ -21,9 +21,8 @@ import           Control.Monad.Trans.Reader (ReaderT, ask, local, runReaderT)
 import           Control.Monad.Trans.State  (State, execState, get, modify, put)
 import           Control.Monad.Trans.Writer (Writer, execWriter, tell)
 import           Data.Bifunctor             (first, second)
-import           Data.DList                 (DList, snoc)
 import           Data.Hashable              (Hashable, hash, hashWithSalt)
-import           Data.IntMap                (Key)
+import           Data.IntMap                (IntMap, insert)
 import           Data.Monoid                ((<>))
 import           Miso.String                (MisoString, unpack)
 
@@ -55,11 +54,11 @@ data Style
   deriving (Show, Eq, Ord)
 
 newtype Styles = Styles
-  { unStyles :: DList (Key, Style)
+  { unStyles :: IntMap Style
   } deriving (Show, Eq, Ord)
 
 insertStyle :: Style -> Styles -> Styles
-insertStyle s (Styles ss) = Styles (snoc ss (hash s, s))
+insertStyle s (Styles ss) = Styles (insert (hash s) s ss)
 
 instance Hashable Property where
   hashWithSalt s (Property p v) = hashWithSalt s (unpack p, unpack v)
