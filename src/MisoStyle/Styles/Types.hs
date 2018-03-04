@@ -61,18 +61,23 @@ insertStyle :: Style -> Styles -> Styles
 insertStyle s (Styles ss) = Styles (insert (hash s) s ss)
 
 instance Hashable Property where
-  hashWithSalt s (Property p v) = hashWithSalt s (unpack p, unpack v)
+  hashWithSalt s (Property p v) =
+    s `hashWithSalt` unpack p `hashWithSalt` unpack v
 
 instance Hashable Keyframe where
-  hashWithSalt s (Keyframe stop b) = hashWithSalt s (unpack stop, b)
+  hashWithSalt s (Keyframe stop b) =
+    s `hashWithSalt` unpack stop `hashWithSalt` b
 
 instance Hashable Keyframes where
   hashWithSalt s (Keyframes ks) = hashWithSalt s ks
 
 instance Hashable Style where
-  hashWithSalt s (Rule m ss p) = hashWithSalt s (unpack <$> m, unpack <$> ss, p)
+  hashWithSalt s (Rule m ss p) =
+    s `hashWithSalt` (unpack <$> m) `hashWithSalt` (unpack <$> ss) `hashWithSalt`
+    p
   hashWithSalt s (Animation m ss ks) =
-    hashWithSalt s (unpack <$> m, unpack <$> ss, ks)
+    s `hashWithSalt` (unpack <$> m) `hashWithSalt` (unpack <$> ss) `hashWithSalt`
+    ks
 
 instance Monoid Styles where
   mempty = Styles mempty
