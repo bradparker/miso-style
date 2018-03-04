@@ -35,8 +35,7 @@ library
     transformers,
     containers,
     miso,
-    hashable,
-    dlist
+    hashable
 
 test-suite tests
   type: exitcode-stdio-1.0

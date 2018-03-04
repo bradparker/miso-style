@@ -14,6 +14,6 @@ let
     then haskellPackages.callPackage (misosrc + "/miso-ghcjs.nix") {}
     else haskellPackages.callPackage (misosrc + "/miso-ghc.nix") {};
 in
-  haskellPackages.callPackage ./miso-style.nix {
+  haskellPackages.callPackage ./package.nix {
     miso = miso;
   }
